@@ -12,6 +12,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TicketDAO {
 
@@ -85,5 +87,43 @@ public class TicketDAO {
             dataBaseConfig.closeConnection(con);
         }
         return false;
+    }
+    
+    /**
+     * 	AJOUT
+     * @return ticket list
+     */
+    public int getAllTicket() {
+        Connection con = null;
+        Ticket ticket = null;
+        List<Ticket> listTicket = new ArrayList<Ticket>();
+        ResultSet rs = null;
+        int NbTicket = 0;
+        
+        try {
+            con = dataBaseConfig.getConnection();
+            PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) FROM ticket");
+            rs = ps.executeQuery();
+            
+            NbTicket = rs.getInt(1);
+            
+			/*
+			 * while(rs.next()) { ticket = new Ticket(); ParkingSpot parkingSpot = new
+			 * ParkingSpot(rs.getInt(1), ParkingType.valueOf(rs.getString(6)),false);
+			 * ticket.setParkingSpot(parkingSpot); ticket.setId(rs.getInt(2));
+			 * ticket.setVehicleRegNumber(rs.getString(2));
+			 * ticket.setPrice(rs.getDouble(3)); ticket.setInTime(rs.getTimestamp(4));
+			 * ticket.setOutTime(rs.getTimestamp(5)); listTicket.add(ticket);
+			 * 
+			 * }
+			 */
+            dataBaseConfig.closeResultSet(rs);
+            dataBaseConfig.closePreparedStatement(ps);
+        }catch (Exception ex){
+            logger.error("Error fetching next available slot",ex);
+        }finally {
+            dataBaseConfig.closeConnection(con);
+        }
+        return NbTicket;
     }
 }
