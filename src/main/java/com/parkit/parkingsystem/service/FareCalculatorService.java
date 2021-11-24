@@ -10,22 +10,19 @@ public class FareCalculatorService {
 	
     public void calculateFare(Ticket ticket) {
         if( (ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime())) ){
-            throw new IllegalArgumentException("Out time provided is incorrect:"+ ticket.getOutTime().toString() + " IN TIME : " + ticket.getInTime().toString());
+            throw new IllegalArgumentException("Out time provided is incorrect:"+ ticket.getOutTime().toString() + " - IN TIME : " + ticket.getInTime().toString());
         }
         
         Date inHour = ticket.getInTime();
         Date outHour = ticket.getOutTime();
        
         //TODO: Some tests are failing here. Need to check if this logic is correct
-        //int duration = outHour.getDate() - inHour.getDate();
              
         /* Convert milliseconds to hours */
-        float getMinutes = TimeUnit.MINUTES.convert(outHour.getTime() - inHour.getTime(), TimeUnit.MILLISECONDS);
-        float duration = getMinutes / 60;
-        //System.out.println("Duration : " + duration);
+        float minutes = TimeUnit.MINUTES.convert(outHour.getTime() - inHour.getTime(), TimeUnit.MILLISECONDS);
+        float duration = minutes / 60;
         
         /* Free less than 30 minutes */
-        System.out.println(ticket.getParkingSpot().getParkingType());
         if (duration >= 0.5) {
         	switch (ticket.getParkingSpot().getParkingType()){
             case CAR: {
@@ -39,7 +36,8 @@ public class FareCalculatorService {
             default: throw new IllegalArgumentException("Unkown Parking Type");
         	}	
         } else {
-        	ticket.setPrice(duration);
+        	System.out.println("Less Than 30min - Free");
+        	ticket.setPrice(0);
         }
         
     }
