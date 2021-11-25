@@ -72,6 +72,7 @@ public class ParkingDataBaseIT {
         //TODO: check that the fare generated and out time are populated correctly in the database
         
         assertNotNull(ticketDAO.getTicket("ABCDEF").getOutTime());
+        /* TODO modifier l'heure d'netrée du ticket ABCDEF */
         assertNotNull(ticketDAO.getTicket("ABCDEF").getPrice());
         //assertTrue(ticketDAO.getTicket("ABCDEF").getPrice() > 0);
     }
