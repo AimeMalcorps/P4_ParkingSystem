@@ -1,9 +1,12 @@
 package com.parkit.parkingsystem.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
+
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -65,16 +68,15 @@ public class ParkingDataBaseIT {
     }
 
     @Test
-    public void testParkingLotExit(){
+    public void testParkingLotExit() throws InterruptedException{
         testParkingACar();
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+        TimeUnit.SECONDS.sleep(1);
         parkingService.processExitingVehicle();
         //TODO: check that the fare generated and out time are populated correctly in the database
-        
+     
         assertNotNull(ticketDAO.getTicket("ABCDEF").getOutTime());
-        /* TODO modifier l'heure d'netrée du ticket ABCDEF */
-        assertNotNull(ticketDAO.getTicket("ABCDEF").getPrice());
-        //assertTrue(ticketDAO.getTicket("ABCDEF").getPrice() > 0);
+        assertNotEquals(0, ticketDAO.getTicket("ABCDEF").getPrice());
     }
 
 }

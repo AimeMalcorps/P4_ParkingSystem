@@ -15,8 +15,6 @@ public class FareCalculatorService {
         
         Date inHour = ticket.getInTime();
         Date outHour = ticket.getOutTime();
-       
-        //TODO: Some tests are failing here. Need to check if this logic is correct
              
         /* Convert milliseconds to hours */
         float minutes = TimeUnit.MINUTES.convert(outHour.getTime() - inHour.getTime(), TimeUnit.MILLISECONDS);
@@ -38,7 +36,6 @@ public class FareCalculatorService {
         } else {
         	System.out.println("Less Than 30min - Free");
         	ticket.setPrice(0);
-        }
-        
+        }     
     }
 }
