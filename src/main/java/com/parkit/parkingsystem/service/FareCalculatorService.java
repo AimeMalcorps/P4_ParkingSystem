@@ -4,9 +4,12 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import com.parkit.parkingsystem.constants.Fare;
+import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.model.Ticket;
 
 public class FareCalculatorService {
+	
+	TicketDAO ticketDAO = new TicketDAO();
 	
     public void calculateFare(Ticket ticket) {
         if( (ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime())) ){
@@ -17,7 +20,7 @@ public class FareCalculatorService {
         Date outHour = ticket.getOutTime();
              
         /* Convert milliseconds to hours */
-        float minutes = TimeUnit.MINUTES.convert(outHour.getTime() - inHour.getTime(), TimeUnit.MILLISECONDS);
+        float minutes = TimeUnit.MILLISECONDS.convert(outHour.getTime() - inHour.getTime(), TimeUnit.MILLISECONDS);
         float duration = minutes / 60;
         
         /* Free less than 30 minutes */
@@ -25,10 +28,15 @@ public class FareCalculatorService {
         	switch (ticket.getParkingSpot().getParkingType()){
             case CAR: {
                 ticket.setPrice(duration * Fare.CAR_RATE_PER_HOUR);
+                if (ticketDAO.getRecurrentTicket(ticket.getVehicleRegNumber()) > 1) {
+                	ticket.setPrice(ticket.getPrice() / 1.05);
+                }
                 break;
             }
             case BIKE: {
                 ticket.setPrice(duration * Fare.BIKE_RATE_PER_HOUR);
+                if (ticketDAO.getRecurrentTicket(ticket.getVehicleRegNumber()) > 1)
+                	ticket.setPrice(ticket.getPrice() / 1.05);
                 break;
             }
             default: throw new IllegalArgumentException("Unkown Parking Type");
