@@ -92,15 +92,15 @@ public class TicketDAO {
 	 * 
 	 * @return Number of similar tickets
 	 */
-	public int getRecurrentTicket(String imat) {
+	public int getRecurrentTicket(String vehicleRegNumber) {
 		Connection con = null;
 		ResultSet rs = null;
 		int NbTicket = 0;
 
 		try {
 			con = dataBaseConfig.getConnection();
-			PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) FROM ticket where VEHICLE_REG_NUMBER=?");
-			ps.setString(1,imat);		
+			PreparedStatement ps = con.prepareStatement(DBConstants.GET_RECCURENT);
+			ps.setString(1,vehicleRegNumber);		
 			rs = ps.executeQuery();
 			if (rs.next()) {
 				NbTicket = rs.getInt(1);

@@ -20,7 +20,7 @@ public class FareCalculatorService {
         Date outHour = ticket.getOutTime();
              
         /* Convert milliseconds to hours */
-        float minutes = TimeUnit.MILLISECONDS.convert(outHour.getTime() - inHour.getTime(), TimeUnit.MILLISECONDS);
+        float minutes = TimeUnit.MINUTES.convert(outHour.getTime() - inHour.getTime(), TimeUnit.MILLISECONDS);
         float duration = minutes / 60;
         
         /* Free less than 30 minutes */
@@ -29,14 +29,14 @@ public class FareCalculatorService {
             case CAR: {
                 ticket.setPrice(duration * Fare.CAR_RATE_PER_HOUR);
                 if (ticketDAO.getRecurrentTicket(ticket.getVehicleRegNumber()) > 1) {
-                	ticket.setPrice(ticket.getPrice() / 1.05);
+                	ticket.setPrice((ticket.getPrice() - ((ticket.getPrice() * 5) / 100)));
                 }
                 break;
             }
             case BIKE: {
                 ticket.setPrice(duration * Fare.BIKE_RATE_PER_HOUR);
                 if (ticketDAO.getRecurrentTicket(ticket.getVehicleRegNumber()) > 1)
-                	ticket.setPrice(ticket.getPrice() / 1.05);
+                	ticket.setPrice(ticket.getPrice() - ((ticket.getPrice() * 5) / 100));
                 break;
             }
             default: throw new IllegalArgumentException("Unkown Parking Type");
