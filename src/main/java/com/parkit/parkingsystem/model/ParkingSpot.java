@@ -1,5 +1,5 @@
 package com.parkit.parkingsystem.model;
-
+//TEST GITLAB CI
 import com.parkit.parkingsystem.constants.ParkingType;
 
 public class ParkingSpot {
